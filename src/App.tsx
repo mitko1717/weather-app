@@ -1,12 +1,9 @@
-// import { Counter } from './features/counter/Counter';
-// import './App.css';
+import Weather from './features/weather/Weather';
 
 const App = () => {
   return (
-    <div className="bg-black h-[100vh] w-full">
-      {/* <header className="App-header">
-        <Counter />
-      </header> */}
+    <div className="h-[100vh] w-full">
+      <Weather />
     </div>
   );
 }
