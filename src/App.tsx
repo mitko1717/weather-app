@@ -1,4 +1,4 @@
-import Weather from './features/weather/Weather';
+import Weather from "./features/weather/Weather";
 
 const App = () => {
   return (
@@ -6,6 +6,6 @@ const App = () => {
       <Weather />
     </div>
   );
-}
+};
 
 export default App;
