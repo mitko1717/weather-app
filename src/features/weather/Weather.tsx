@@ -1,4 +1,12 @@
-import { useState, useEffect } from "react";
+import React from "react";
+import { Dispatch, FC, SetStateAction, useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  // Switch,
+  Route,
+  Link,
+  useNavigate
+} from "react-router-dom";
 import Input from "../../components/Input";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import {
@@ -8,8 +16,14 @@ import {
   addCity,
   makeErrorFalse,
 } from "./weatherSlice";
+import CityCard from "../../components/CityCard";
 
-const Weather = () => {
+type WeatherProps = {
+  cityInfo: any;
+  setCityInfo: Dispatch<SetStateAction<any>>;
+};
+
+const Weather: FC <WeatherProps> = ({ cityInfo, setCityInfo}) => {
   const { cities, citiesWeather, error } = useAppSelector(state);
   const dispatch = useAppDispatch();
 
@@ -20,10 +34,9 @@ const Weather = () => {
     dispatch(addCity(city));
   };
 
-  useEffect(() => {
-    console.log("citiesWeather", citiesWeather);
-    console.log("cities", cities);
-  }, [cities, citiesWeather]);
+  const deleteCity = (id: number) => {
+    dispatch(citiesWeatherDelete(id))
+  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -47,7 +60,7 @@ const Weather = () => {
   }, [cities]);
 
   return (
-    <div className="flex bg-slate-400 p-4 w-full h-full flex-col">
+    <div className="flex bg-slate-400 p-4 h-[100vh] w-full flex-col">
       <div className="w-[80%] mx-auto relative">
         <Input
           value={value}
@@ -72,18 +85,7 @@ const Weather = () => {
           citiesWeather.map((city) => {
             if (city) {
               return (
-                <div
-                  className="m-2 shadow-md flex flex-col p-4 justify-center cursor-pointer bg-white h-[200px] w-[200px] min-w-[200px]"
-                  key={city.id}
-                >
-                  <h2 className="text-center font-bold pb-6 cursor-pointer">
-                    {city.name}
-                  </h2>
-                  <p>Country: {city.sys.country}</p>
-                  <p>Temperature: {Math.round(city.main.temp)}°C</p>
-                  <p>{city.weather.description}</p>
-                  <p>Wind speed: {city.wind.speed} km/h</p>
-                </div>
+                <CityCard key={city.name} city={city} cityInfo={cityInfo} setCityInfo={setCityInfo} deleteCity={deleteCity}/>
               );
             }
           })

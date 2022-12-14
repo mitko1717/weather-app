@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 
 export interface CounterState {
@@ -36,14 +36,15 @@ export const weatherSlice = createSlice({
   initialState,
   reducers: {
     addCity: (state, action) => {
-      console.log("state.requestStatus", state.requestStatus);
-
-      if (state.requestStatus === 200) {
         state.cities.push(action.payload);
-      }
+        console.log(current(state.cities));
     },
     citiesWeatherDelete: (state, action) => {
-      state.citiesWeather.filter((city) => city.id !== action.payload.id);
+      console.log('action.payload', action.payload);
+      
+      console.log(current(state.citiesWeather));
+      state.citiesWeather.filter((city) => city.id !== action.payload);
+      console.log(current(state.citiesWeather));
     },
     makeErrorFalse: (state) => {
       state.error = false;
@@ -54,28 +55,24 @@ export const weatherSlice = createSlice({
     builder.addCase(
       getWeather.fulfilled,
       (state: any, action: PayloadAction<any>) => {
-        state.requestStatus = action.payload.cod;
-
-        if (action.payload.cod === 200) {
-          if (
-            !state.citiesWeather.find(
-              (city: { id: any }) => city.id === action.payload.id
-            )
-          ) {
+        if (action.payload.cod && action.payload.cod === 200) {
+          if (!state.citiesWeather.find((city: { id: number }) => city.id === +action.payload.id)) {
             state.citiesWeather.push(action.payload);
-            state.cities.push(action.payload.name.toLocaleString());
           }
+
           state.error = false;
-        } else if (action.payload.cod === 404) {
+        } else if (action.payload.cod && action.payload.cod === 404) {
+
           state.error = true;
+          state.cities = state.cities.slice(0, -1)
+          console.log(state.cities);
         }
       }
     );
   },
 });
 
-export const { citiesWeatherDelete, addCity, makeErrorFalse } =
-  weatherSlice.actions;
+export const { citiesWeatherDelete, addCity, makeErrorFalse } = weatherSlice.actions;
 
 export const state = (state: RootState) => state.weather;
 
