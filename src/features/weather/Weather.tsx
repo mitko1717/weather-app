@@ -18,6 +18,8 @@ type WeatherProps = {
 
 const Weather: FC<WeatherProps> = ({ cityInfo, setCityInfo }) => {
   const { cities, citiesWeather, error } = useAppSelector(state);
+  // console.log(cities, citiesWeather);
+  
   const dispatch = useAppDispatch();
 
   const [value, setValue] = useState("");
@@ -95,7 +97,7 @@ const Weather: FC<WeatherProps> = ({ cityInfo, setCityInfo }) => {
       </div>
       <div className="flex w-full h-auto justify-center mt-10 flex-wrap">
         {citiesWeather.length > 0 ? (
-          citiesWeather.map((city) => {
+          citiesWeather.map((city: { name: React.Key | null | undefined; }) => {
             if (city) {
               return (
                 <CityCard

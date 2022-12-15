@@ -3,16 +3,10 @@ import { FC } from "react";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TempBlock from "../components/TempBlock";
+import CircularProgress from "@mui/material/CircularProgress";
 
 type CityCardProps = {
   city: any;
-};
-
-const HEADERS = {
-  "Content-Type": "application/json;charset=utf-8",
-  "Access-Control-Allow-Credentials": true,
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE",
 };
 
 const CityInfo: FC<CityCardProps> = ({ city }) => {
@@ -66,7 +60,7 @@ const CityInfo: FC<CityCardProps> = ({ city }) => {
         {weatherDetails.length > 0 ? (
           <TempBlock weatherDetails={weatherDetails} />
         ) : (
-          <div></div>
+          <div className="flex justify-center items-center mt-10"><CircularProgress /></div>
         )}
       </div>
     </div>

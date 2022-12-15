@@ -1,8 +1,8 @@
 import {
   createAsyncThunk,
   createSlice,
-  current,
   PayloadAction,
+  current
 } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 
@@ -14,8 +14,11 @@ export interface CounterState {
   requestStatus: number | null;
 }
 
+const cities = typeof window !== "undefined" && localStorage.getItem("cities") ? 
+ JSON.parse(localStorage.getItem("cities") || '') : [] 
+
 const initialState: CounterState = {
-  cities: ["london", "kyiv", "kremenchuk", "odesa"],
+  cities: cities || ["london", "kyiv", "kremenchuk", "odesa"],
   apiID: `0075720297132707fab37b1ca824c598`,
   citiesWeather: [],
   error: false,
@@ -40,7 +43,7 @@ export const weatherSlice = createSlice({
   reducers: {
     addCity: (state, action) => {
       state.cities.push(action.payload);
-      // console.log(current(state.cities));
+      localStorage.setItem('cities', JSON.stringify(state.cities));
     },
     citiesWeatherDelete: (state, action) => {
       state.citiesWeather = state.citiesWeather.filter(
@@ -49,6 +52,7 @@ export const weatherSlice = createSlice({
       state.cities = state.cities.filter(
         (city) => city !== action.payload.name.toLowerCase()
       );
+      localStorage.setItem('cities', JSON.stringify(state.cities));
     },
     makeErrorFalse: (state) => {
       state.error = false;
