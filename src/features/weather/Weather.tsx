@@ -10,6 +10,7 @@ import {
   makeErrorFalse,
 } from "./weatherSlice";
 import CityCard from "../../components/CityCard";
+import Errors from "../../components/Errors";
 
 type WeatherProps = {
   cityInfo: any;
@@ -17,20 +18,13 @@ type WeatherProps = {
 };
 
 const Weather: FC<WeatherProps> = ({ cityInfo, setCityInfo }) => {
-  const { cities, citiesWeather, error } = useAppSelector(state);
-  // console.log(cities, citiesWeather);
-  
+  const { cities, citiesWeather, isError } = useAppSelector(state);
+
   const dispatch = useAppDispatch();
 
   const [value, setValue] = useState("");
-  const [cityAlreadyAdded, setCityAlreadyAdded] = useState(false);
+  const [isCityAlreadyAdded, setCityAlreadyAdded] = useState(false);
   const [isUpdating, setIsUpdating] = useState("");
-
-  // const storedCities: any = localStorage.getItem("_cities") || cities;
-
-  // useEffect(() => {
-  //   localStorage.setItem("_cities", JSON.stringify(cities));
-  // }, [cities])
 
   const addCityToState = (city: string) => {
     dispatch(addCity(city));
@@ -57,18 +51,15 @@ const Weather: FC<WeatherProps> = ({ cityInfo, setCityInfo }) => {
     setTimeout(() => {
       setCityAlreadyAdded(false);
     }, 1000);
-  }, [cityAlreadyAdded]);
+  }, [isCityAlreadyAdded]);
 
   useEffect(() => {
     setTimeout(() => {
       dispatch(makeErrorFalse);
     }, 1000);
-  }, [error, dispatch]);
+  }, [isError, dispatch]);
 
   useEffect(() => {
-    // console.log(JSON.parse(storedCities));
-    // let cities = JSON.parse(storedCities)
-
     cities.forEach((city: string) => {
       getWeatherHandler(city, _);
     });
@@ -76,7 +67,8 @@ const Weather: FC<WeatherProps> = ({ cityInfo, setCityInfo }) => {
 
   return (
     <div className="flex bg-slate-400 p-4 h-[100vh] w-full flex-col">
-      <div className="w-[80%] mx-auto relative">
+      <h1 className="text-center text-4xl uppercase">get weather app</h1>
+      <div className="w-[40%] mx-auto relative">
         <Input
           value={value}
           setValue={setValue}
@@ -84,20 +76,11 @@ const Weather: FC<WeatherProps> = ({ cityInfo, setCityInfo }) => {
           addCityToState={addCityToState}
           setCityAlreadyAdded={setCityAlreadyAdded}
         />
-        {cityAlreadyAdded && (
-          <div className="absolute bottom-[-6] text-blue-600">
-            THIS CITY IS ALREADY DISPLAYED
-          </div>
-        )}
-        {error && (
-          <div className="absolute bottom-[-6] text-blue-600">
-            ERROR GETTING WEATHER FOR THIS CITY REQUEST
-          </div>
-        )}
+        <Errors isCityAlreadyAdded={isCityAlreadyAdded} isError={isError} />
       </div>
       <div className="flex w-full h-auto justify-center mt-10 flex-wrap">
         {citiesWeather.length > 0 ? (
-          citiesWeather.map((city: { name: React.Key | null | undefined; }) => {
+          citiesWeather.map((city: { name: React.Key | null | undefined }) => {
             if (city) {
               return (
                 <CityCard

@@ -38,7 +38,7 @@ const Input: FC<InputProps> = ({
         onChange={handleChange}
         fullWidth={true}
         id="standard-basic"
-        label="city search"
+        label="enter the name"
         variant="standard"
       />
       <span className="flex items-end	ml-2 mb-[2px]">

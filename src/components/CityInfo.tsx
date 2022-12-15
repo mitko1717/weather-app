@@ -60,7 +60,9 @@ const CityInfo: FC<CityCardProps> = ({ city }) => {
         {weatherDetails.length > 0 ? (
           <TempBlock weatherDetails={weatherDetails} />
         ) : (
-          <div className="flex justify-center items-center mt-10"><CircularProgress /></div>
+          <div className="flex justify-center items-center mt-10">
+            <CircularProgress />
+          </div>
         )}
       </div>
     </div>

@@ -1,27 +1,24 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  PayloadAction,
-  current
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 
 export interface CounterState {
   cities: string[];
   apiID: string;
   citiesWeather: any[];
-  error: boolean;
+  isError: boolean;
   requestStatus: number | null;
 }
 
-const cities = typeof window !== "undefined" && localStorage.getItem("cities") ? 
- JSON.parse(localStorage.getItem("cities") || '') : [] 
+const cities =
+  typeof window !== "undefined" && localStorage.getItem("cities")
+    ? JSON.parse(localStorage.getItem("cities") || "")
+    : [];
 
 const initialState: CounterState = {
   cities: cities || ["london", "kyiv", "kremenchuk", "odesa"],
   apiID: `0075720297132707fab37b1ca824c598`,
   citiesWeather: [],
-  error: false,
+  isError: false,
   requestStatus: null,
 };
 
@@ -43,19 +40,19 @@ export const weatherSlice = createSlice({
   reducers: {
     addCity: (state, action) => {
       state.cities.push(action.payload);
-      localStorage.setItem('cities', JSON.stringify(state.cities));
+      localStorage.setItem("cities", JSON.stringify(state.cities));
     },
     citiesWeatherDelete: (state, action) => {
       state.citiesWeather = state.citiesWeather.filter(
         (city) => city.id !== action.payload.id
       );
       state.cities = state.cities.filter(
-        (city) => city !== action.payload.name.toLowerCase()
+        (city) => city !== action.payload.name?.toLowerCase()
       );
-      localStorage.setItem('cities', JSON.stringify(state.cities));
+      localStorage.setItem("cities", JSON.stringify(state.cities));
     },
     makeErrorFalse: (state) => {
-      state.error = false;
+      state.isError = false;
     },
   },
 

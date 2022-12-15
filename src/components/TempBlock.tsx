@@ -5,8 +5,6 @@ type TempBlockProps = {
 };
 
 const TempBlock: FC<TempBlockProps> = ({ weatherDetails }) => {
-  console.log("weatherDetails", weatherDetails);
-
   return (
     <div className="flex flex-wrap mx-auto mt-6 h-[100px]">
       {Array.isArray(weatherDetails) && weatherDetails.length > 0 ? (
