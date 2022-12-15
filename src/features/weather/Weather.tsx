@@ -1,12 +1,5 @@
 import React from "react";
 import { Dispatch, FC, SetStateAction, useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  // Switch,
-  Route,
-  Link,
-  useNavigate
-} from "react-router-dom";
 import Input from "../../components/Input";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import {
@@ -23,20 +16,40 @@ type WeatherProps = {
   setCityInfo: Dispatch<SetStateAction<any>>;
 };
 
-const Weather: FC <WeatherProps> = ({ cityInfo, setCityInfo}) => {
+const Weather: FC<WeatherProps> = ({ cityInfo, setCityInfo }) => {
   const { cities, citiesWeather, error } = useAppSelector(state);
   const dispatch = useAppDispatch();
 
   const [value, setValue] = useState("");
   const [cityAlreadyAdded, setCityAlreadyAdded] = useState(false);
+  const [isUpdating, setIsUpdating] = useState("");
+
+  // const storedCities: any = localStorage.getItem("_cities") || cities;
+
+  // useEffect(() => {
+  //   localStorage.setItem("_cities", JSON.stringify(cities));
+  // }, [cities])
 
   const addCityToState = (city: string) => {
     dispatch(addCity(city));
   };
 
-  const deleteCity = (id: number) => {
-    dispatch(citiesWeatherDelete(id))
-  }
+  const deleteCity = (e: any, id: number, name: string) => {
+    e.stopPropagation();
+    e.preventDefault();
+    dispatch(citiesWeatherDelete({ id, name }));
+  };
+
+  const getWeatherHandler = async (city: string, e: any) => {
+    if (typeof e === "object") {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+
+    setIsUpdating(city);
+    await dispatch(getWeather(city));
+    setIsUpdating("");
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -48,16 +61,16 @@ const Weather: FC <WeatherProps> = ({ cityInfo, setCityInfo}) => {
     setTimeout(() => {
       dispatch(makeErrorFalse);
     }, 1000);
-  }, [error]);
+  }, [error, dispatch]);
 
   useEffect(() => {
-    const getWeatherHandler = async (city: string) => {
-      await dispatch(getWeather(city));
-    };
-    cities.forEach((city) => {
-      getWeatherHandler(city);
+    // console.log(JSON.parse(storedCities));
+    // let cities = JSON.parse(storedCities)
+
+    cities.forEach((city: string) => {
+      getWeatherHandler(city, _);
     });
-  }, [cities]);
+  }, [cities, dispatch]);
 
   return (
     <div className="flex bg-slate-400 p-4 h-[100vh] w-full flex-col">
@@ -85,12 +98,20 @@ const Weather: FC <WeatherProps> = ({ cityInfo, setCityInfo}) => {
           citiesWeather.map((city) => {
             if (city) {
               return (
-                <CityCard key={city.name} city={city} cityInfo={cityInfo} setCityInfo={setCityInfo} deleteCity={deleteCity}/>
+                <CityCard
+                  key={city.name}
+                  city={city}
+                  cityInfo={cityInfo}
+                  setCityInfo={setCityInfo}
+                  deleteCity={deleteCity}
+                  getWeatherHandler={getWeatherHandler}
+                  isUpdating={isUpdating}
+                />
               );
-            }
+            } else return null;
           })
         ) : (
-          <div></div>
+          <div>NO CITIES DATA</div>
         )}
       </div>
     </div>
@@ -98,3 +119,7 @@ const Weather: FC <WeatherProps> = ({ cityInfo, setCityInfo}) => {
 };
 
 export default Weather;
+
+function _(_: any, city: string) {
+  throw new Error("Function not implemented.");
+}
