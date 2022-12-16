@@ -12,6 +12,8 @@ type CityCardProps = {
 const CityInfo: FC<CityCardProps> = ({ city }) => {
   const [weatherDetails, setWeatherDetails] = useState([]);
 
+  console.log(city);
+
   const getWeatherDetails = async () => {
     try {
       const res = await fetch(
@@ -40,7 +42,7 @@ const CityInfo: FC<CityCardProps> = ({ city }) => {
           </Button>
         </div>
       </Link>
-        <div
+      {city !== null ? <div
         className="mt-10 drop-shadow-2xl flex flex-col p-8 justify-center bg-white h-[500px] w-[550px] min-w-[550px] relative mx-auto"
         key={city.id}
       >
@@ -64,7 +66,7 @@ const CityInfo: FC<CityCardProps> = ({ city }) => {
             <CircularProgress />
           </div>
         )}
-      </div>
+      </div> : <div className="p-16 text-3xl mx-auto">PLEASE GO BACK TO UPDATE CITY WEATHER INFO</div>}
     </div>
   );
 };
