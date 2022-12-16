@@ -11,9 +11,7 @@ type CityCardProps = {
 
 const CityInfo: FC<CityCardProps> = ({ city }) => {
   const [weatherDetails, setWeatherDetails] = useState([]);
-
-  console.log(city);
-
+  
   const getWeatherDetails = async () => {
     try {
       const res = await fetch(
