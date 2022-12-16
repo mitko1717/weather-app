@@ -40,7 +40,7 @@ const CityInfo: FC<CityCardProps> = ({ city }) => {
           </Button>
         </div>
       </Link>
-      <div
+        <div
         className="mt-10 drop-shadow-2xl flex flex-col p-8 justify-center bg-white h-[500px] w-[550px] min-w-[550px] relative mx-auto"
         key={city.id}
       >
