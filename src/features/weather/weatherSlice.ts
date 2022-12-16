@@ -15,7 +15,7 @@ const cities =
     : [];
 
 const initialState: CounterState = {
-  cities: cities || ["london", "kyiv", "kremenchuk", "odesa"],
+  cities: cities.lenth > 0 ? cities : ["london", "kyiv", "kremenchuk", "odesa"],
   apiID: `0075720297132707fab37b1ca824c598`,
   citiesWeather: [],
   isError: false,
